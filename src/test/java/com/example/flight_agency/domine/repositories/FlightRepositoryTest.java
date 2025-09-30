@@ -62,16 +62,24 @@ class FlightRepositoryTest extends AbstractRepositoryTest {
         Airport origin = createAirport("BOG","EL DORADO","BOGOTA");
         Airport destination = createAirport("SM","SIMON BOLIVAR","SANTA MARTA");
 
-        Flight flight = Flight.builder().airport_origin(origin).airport_destination(destination).departureTime(OffsetDateTime.now()).build();
+        Flight flight = Flight.builder().airport_origin(origin).airport_destination(destination).
+                departureTime(OffsetDateTime.now()).build();
         flightRepository.save(flight);
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Flight> foundFlights = flightRepository.findByOriginAndDestinationAndDepartureTimeBetween("BOG","SM", OffsetDateTime.now().minusMinutes(1),  OffsetDateTime.now().plusMinutes(1), pageable);
+        Page<Flight> foundFlights = flightRepository.
+                findByOriginAndDestinationAndDepartureTimeBetween("BOG",
+                        "SM", OffsetDateTime.now().minusMinutes(1),
+                        OffsetDateTime.now().plusMinutes(1), pageable);
 
 
-       assertThat(foundFlights).isNotEmpty();
-       assertThat(foundFlights.getTotalElements()).isEqualTo(1);
-       assertThat(foundFlights.getContent().getFirst().getAirport_origin().getCode()).isEqualTo("SM");
+        assertThat(foundFlights).isNotEmpty();
+        assertThat(foundFlights.getTotalElements()).isEqualTo(1);
+        assertThat(foundFlights.getContent().getFirst().getAirport_origin().
+                getCode()).isEqualTo("BOG");
+        assertThat(foundFlights.getContent().getFirst().getAirport_destination().
+                getCode()).isEqualTo("SM");
+
 
     }
 
@@ -87,7 +95,8 @@ class FlightRepositoryTest extends AbstractRepositoryTest {
                 departureTime(OffsetDateTime.now()).tags(Set.of(tag)).build();
         flightRepository.save(flight);
 
-        List<Flight> foundFlightAll = flightRepository.findFlightsWithAssociations("GU","GA",OffsetDateTime.now().minusMinutes(1),OffsetDateTime.now().plusMinutes(1));
+        List<Flight> foundFlightAll = flightRepository.findFlightsWithAssociations("GU",
+                "GA",OffsetDateTime.now().minusMinutes(1),OffsetDateTime.now().plusMinutes(1));
         assertThat(foundFlightAll).isNotEmpty();
         Flight fouFlight1 =  foundFlightAll.getFirst();
         assertThat(fouFlight1.getAirline()).isNotNull();

@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
 public class Passenger {
     @Id  @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

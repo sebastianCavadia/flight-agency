@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE UPPER(b.passenger.email) = UPPER(:email) " +
             "ORDER BY b.createAt DESC")
-    Page<Booking> findByPassengerEmailIgnoreCaseOrderByCreatedAtDesc(
+    Page<Booking> findByPassengerEmailIgnoreCaseOrderByCreateAtDesc(
             @Param("email") String email,
             Pageable pageable);
 
@@ -24,7 +24,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "LEFT JOIN FETCH b.items i " +
             "LEFT JOIN FETCH i.flight " +
             "WHERE b.id = :id")
-    Optional<Booking> findByIdWithDetails(@Param("bookingId") Long bookingId);
+    Optional<Booking> findByIdWithDetails(@Param("id") Long id);
 
     Optional<Booking> findBookingById(Long id);
+
+    Page<Booking> findByPassengerEmail(String passengerEmail, Pageable pageable);
 }
