@@ -47,10 +47,15 @@ class BookingItemRepositoryTest extends AbstractRepositoryTest {
         BookingItem i1 = BookingItem.builder().build();
         i1.setBooking(saveBooking);
         i1.setPrice(BigDecimal.valueOf(150));
+        i1.setCabin(Cabin.ECONOMY);
+        i1.setSegmentOrder(1);
 
         BookingItem i2 = BookingItem.builder().build();
         i2.setBooking(saveBooking);
         i2.setPrice(BigDecimal.valueOf(250));
+        i2.setCabin(Cabin.ECONOMY);
+        i2.setSegmentOrder(2);
+
 
         bookingItemRepository.saveAll(List.of(i1, i2));
         BigDecimal total = bookingItemRepository.calculateBookingTotal(saveBooking.getId());
@@ -62,11 +67,12 @@ class BookingItemRepositoryTest extends AbstractRepositoryTest {
     @DisplayName("Contar los asientos reservados")
     void countSeatsSoldForFlightAndCabin() {
         Flight flight = Flight.builder().build();
+        Booking booking = Booking.builder().build();
         Flight saveFlight = flightRepository.save(flight);
-        BookingItem i1 = BookingItem.builder().flight(saveFlight).
-                cabin(Cabin.BUSINESS).build();
-        BookingItem i2 = BookingItem.builder().flight(saveFlight).
-                cabin(Cabin.BUSINESS).build();
+        BookingItem i1 = BookingItem.builder().booking(booking).flight(saveFlight).
+                cabin(Cabin.BUSINESS).price(BigDecimal.valueOf(100)).segmentOrder(1).build();
+        BookingItem i2 = BookingItem.builder().booking(booking).flight(saveFlight).
+                cabin(Cabin.BUSINESS).price(BigDecimal.valueOf(200)).segmentOrder(2).build();
         bookingItemRepository.saveAll(List.of(i1, i2));
         long cantAsientosReser = bookingItemRepository.countSeatsSoldForFlightAndCabin(saveFlight.getId(),Cabin.BUSINESS);
         assertThat(cantAsientosReser).isNotNull();

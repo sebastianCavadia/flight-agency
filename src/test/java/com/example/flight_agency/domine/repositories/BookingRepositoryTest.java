@@ -25,8 +25,6 @@ class BookingRepositoryTest extends AbstractRepositoryTest {
     private PassengerRepository passengerRepository;
     @Autowired
     private  FlightRepository flightRepository;
-    @Autowired
-    private BookingItemRepository bookingItemRepository;
 
     @Test
     @DisplayName("Buscar reservas de un pasajero por email")
@@ -37,9 +35,10 @@ class BookingRepositoryTest extends AbstractRepositoryTest {
         Booking booking1 = Booking.builder().passenger(savedPassenger).createAt(OffsetDateTime.now().minusDays(3)).build();
         Booking booking2 = Booking.builder().passenger(savedPassenger).createAt(OffsetDateTime.now().minusDays(2)).build();
         Booking booking3 = Booking.builder().passenger(savedPassenger).createAt(OffsetDateTime.now().minusDays(1)).build();
+        bookingRepository.saveAll(List.of(booking1, booking2, booking3));
 
         Pageable  pageable = PageRequest.of(0, 2);
-        var result = bookingRepository.findByPassengerEmailIgnoreCaseOrderByCreatedAtDesc(
+        var result = bookingRepository.findByPassengerEmailIgnoreCaseOrderByCreateAtDesc(
                 "emailprueba@gamil.com", pageable);
         assertThat(result).isNotNull();
         assertThat(result.getTotalElements()).isEqualTo(3);
@@ -59,13 +58,12 @@ class BookingRepositoryTest extends AbstractRepositoryTest {
         Passenger p = Passenger.builder().fullName("Prueba de Oro").email("prueba@gamil.com").build();
         Passenger savedPassenger = passengerRepository.save(p);
 
-        BookingItem bookingItem = BookingItem.builder().flight(flight).build();
-        BookingItem savedBookingItem = bookingItemRepository.save(bookingItem);
-
-        Booking booking = Booking.builder().passenger(savedPassenger).items(List.of(savedBookingItem)).build();
+        Booking booking = Booking.builder().passenger(savedPassenger).build();
+        BookingItem bookingItem = BookingItem.builder().flight(flight).booking(booking).build();
+        booking.addItem(bookingItem);
         Booking savedBooking = bookingRepository.save(booking);
 
-        Optional<Booking> foundBooking = bookingRepository.findBookingById(savedBooking.getId());
+        Optional<Booking> foundBooking = bookingRepository.findByIdWithDetails(savedBooking.getId());
 
         assertThat(foundBooking).isPresent();
         assertThat(foundBooking.get().getPassenger()).isNotNull();

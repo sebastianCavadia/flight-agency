@@ -1,6 +1,5 @@
-package com.example.flight_agency.api.dto.mappers;
+package com.example.flight_agency.services.mappers;
 
-import com.example.flight_agency.api.dto.PassengerDtos;
 import com.example.flight_agency.api.dto.PassengerProfileDTO;
 import com.example.flight_agency.domine.entities.PassengerProfile;
 import org.mapstruct.Mapper;

@@ -40,4 +40,19 @@ class TagRepositoryTest  extends AbstractRepositoryTest {
         assertThat(tags).hasSize(2);
         assertThat(tags).extracting(Tag::getName).containsExactlyInAnyOrder("promo", "eco");
     }
+    @Test
+    @DisplayName("Retorna vacío si no encuentra tag por nombre")
+    void findByName_NotFound() {
+        Optional<Tag> found = tagRepository.findByName("no-existe");
+        assertThat(found).isNotPresent();
+    }
+
+    @Test
+    @DisplayName("Retorna lista vacía si no hay coincidencias en findAllByNameIn")
+    void findAllByNameIn_NotFound() {
+        tagRepository.save(Tag.builder().name("promo").build());
+        List<Tag> tags = tagRepository.findAllByNameIn(List.of("xxx", "yyy"));
+        assertThat(tags).isEmpty();
+    }
+
 }
