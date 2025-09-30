@@ -1,4 +1,4 @@
-package com.example.flight_agency.api.dto.mappers;
+package com.example.flight_agency.services.mappers;
 
 import com.example.flight_agency.api.dto.TagDtos;
 import com.example.flight_agency.domine.entities.Tag;

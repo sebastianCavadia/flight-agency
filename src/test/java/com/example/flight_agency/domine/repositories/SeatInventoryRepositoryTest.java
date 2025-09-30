@@ -20,9 +20,14 @@ class SeatInventoryRepositoryTest extends AbstractRepositoryTest {
     @Autowired
     private FlightRepository flightRepository;
     private Flight createAndSaveFlight() {
-        Flight flight = Flight.builder().build();
+        Flight flight = Flight.builder()
+                .number("AV123")
+                .departureTime(OffsetDateTime.now())
+                .arrivalTime(OffsetDateTime.now().plusHours(1))
+                .build();
         return flightRepository.save(flight);
     }
+
 
     @Test
     @DisplayName("Busca inventario de vuelos y cabina")
@@ -47,7 +52,8 @@ class SeatInventoryRepositoryTest extends AbstractRepositoryTest {
                 cabin(Cabin.BUSINESS).totalSeats(20).availableSeats(15).build();
         seatInventoryRepository.save(inventory);
 
-        boolean available = seatInventoryRepository.hasMinimumSeatsAvailable(flight.getId(),Cabin.BUSINESS,5);
+        boolean available = seatInventoryRepository.
+                hasMinimumSeatsAvailable(flight.getId(),Cabin.BUSINESS,5);
 
 
         assertThat(available).isTrue();

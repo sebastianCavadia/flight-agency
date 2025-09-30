@@ -20,7 +20,12 @@ class PassengerRepositoryTest extends AbstractRepositoryTest {
     @Test
     @DisplayName("Buscar por email")
     void findByEmailIgnoreCase() {
-        Passenger p = Passenger.builder().fullName("Juan carlos Gacha").email("gacha12Juan@gmail.com").build();
+        PassengerProfile profile = PassengerProfile.builder()
+                .phone("3226955656")
+                .countryCode("+57")
+                .build();
+        Passenger p = Passenger.builder().fullName("Juan carlos Gacha").
+                email("gacha12Juan@gmail.com").passengerProfile(profile).build();
         passengerRepository.save(p);
 
         Optional<Passenger> found = passengerRepository.findPassengerByEmailIgnoreCase("gacha12Juan@gmail.com");
@@ -32,14 +37,21 @@ class PassengerRepositoryTest extends AbstractRepositoryTest {
     @Test
     @DisplayName("Buscar perfil por email")
     void findPassengerByEmail() {
-        PassengerProfile pp = PassengerProfile.builder().phone("3226778899").countryCode("+57").build();
-        passengerProfileRepository.save(pp);
+        PassengerProfile pp = PassengerProfile.builder().phone("3226778899").
+                countryCode("+57").build();
 
-        Passenger p = Passenger.builder().fullName("Carlos Garra Gomez").email("gomezcarlos@gmail.com").passengerProfile(pp).build();
+        Passenger p = Passenger.builder().fullName("Carlos Garra Gomez").
+                email("gomezcarlos@gmail.com").passengerProfile(pp).build();
         passengerRepository.save(p);
+
         Optional<Passenger> found = passengerRepository.findPassengerByEmailIgnoreCase(p.getEmail());
 
+        PassengerProfile foundProfile = passengerProfileRepository.findById(pp.getId()).orElseThrow();
         assertThat(found).isPresent();
         assertThat(found.get().getPassengerProfile()).isEqualTo(p.getPassengerProfile());
+
+        assertThat(foundProfile.getPassenger()).isNotNull();
+        assertThat(foundProfile.getPassenger().getEmail()).isEqualTo("gomezcarlos@gmail.com");
+
     }
 }

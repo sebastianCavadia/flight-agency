@@ -1,16 +1,18 @@
-package com.example.flight_agency.api.dto.mappers;
+package com.example.flight_agency.services.mappers;
 
 import com.example.flight_agency.api.dto.BookingItemDtos;
 import com.example.flight_agency.domine.entities.BookingItem;
 import com.example.flight_agency.domine.entities.Flight;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BookingItemMapper {
-    BookingItemMapper INSTANCE = Mappers.getMapper(BookingItemMapper.class);
 
     BookingItemDtos.BookingItemResponse toResponse(BookingItem item);
 
+    @Mapping(target = "id", ignore = true)        // se genera en DB
+    @Mapping(target = "booking", ignore = true)
     BookingItem toEntity(BookingItemDtos.BookingItemCreateRequest request, Flight flight);
 }
