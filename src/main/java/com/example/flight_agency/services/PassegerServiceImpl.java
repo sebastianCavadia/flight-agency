@@ -40,14 +40,14 @@ public class PassegerServiceImpl implements PassegerService {
     public PassengerDtos.PassengerResponse findById(Long id) {
         return passengerRepository.findById(id)
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Passenger not found"));
+                .orElseThrow(() -> new RuntimeException("Passenger no encontrado"));
     }
 
     @Override
     public PassengerDtos.PassengerResponse findByEmail(String email) {
         return passengerRepository.findPassengerByEmailIgnoreCase(email)
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Passenger not found"));
+                .orElseThrow(() -> new RuntimeException("Passenger no encontrado"));
     }
 
     @Override

@@ -5,9 +5,8 @@ import com.example.flight_agency.domine.entities.Tag;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface TagMapper {
-    TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
 
     TagDtos.TagResponse toResponse(Tag tag);
 

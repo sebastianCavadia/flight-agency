@@ -3,7 +3,6 @@ import com.example.flight_agency.api.dto.AirlineDtos;
 import com.example.flight_agency.services.mappers.*;
 import com.example.flight_agency.domine.entities.Airline;
 import com.example.flight_agency.domine.repositories.AirlineRepository;
-import com.example.flight_agency.services.AirlineService;
 import com.example.flight_agency.services.mappers.AirlineMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +14,7 @@ import java.util.NoSuchElementException;
 public class AirlineServiceImpl implements AirlineService {
 
     private final AirlineRepository airlineRepository;
-    private final com.example.flight_agency.services.mappers.AirlineMapper airlineMapper;
+    private final AirlineMapper airlineMapper;
 
     public AirlineServiceImpl(AirlineRepository airlineRepository, AirlineMapper airlineMapper) {
         this.airlineRepository = airlineRepository;
@@ -33,13 +32,13 @@ public class AirlineServiceImpl implements AirlineService {
     public AirlineDtos.AirlineResponse getByCode(String code) {
         return airlineRepository.findAirlineByCodeIgnoreCase(code)
                 .map(airlineMapper::toResponse)
-                .orElseThrow(() -> new NoSuchElementException("Airline not found with code: " + code));
+                .orElseThrow(() -> new NoSuchElementException("Airline no encontado por codigo: " + code));
     }
 
     @Override
     public AirlineDtos.AirlineResponse getById(Long id) {
         return airlineRepository.findById(id)
                 .map(airlineMapper::toResponse)
-                .orElseThrow(() -> new NoSuchElementException("Airline not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Airline no encontrado por id: " + id));
     }
 }

@@ -3,6 +3,7 @@ package com.example.flight_agency.domine.repositories;
 import com.example.flight_agency.domine.entities.Cabin;
 import com.example.flight_agency.domine.entities.SeatInventory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,4 +25,17 @@ select s from SeatInventory
             @Param("flightId") Long flightId,
             @Param("cabin") Cabin cabin,
             @Param("min") int min);
+    @Modifying
+    @Query("UPDATE SeatInventory s SET s.availableSeats = s.availableSeats - :count " +
+            "WHERE s.flight.id = :flightId AND s.cabin = :cabin AND s.availableSeats >= :count")
+    int decrementAvailableSeatsIfEnough(@Param("flightId") Long flightId,
+                                        @Param("cabin") Cabin cabin,
+                                        @Param("count") int count);
+
+    @Modifying
+    @Query("UPDATE SeatInventory s SET s.availableSeats = s.availableSeats + :count " +
+            "WHERE s.flight.id = :flightId AND s.cabin = :cabin")
+    int incrementAvailableSeats(@Param("flightId") Long flightId,
+                                @Param("cabin") Cabin cabin,
+                                @Param("count") int count);
 }

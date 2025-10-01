@@ -25,7 +25,7 @@ public class Passenger {
     @OneToMany(mappedBy = "passenger")
     private List<Booking> bookings;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "passengerProfile_id")
     private PassengerProfile passengerProfile;
 

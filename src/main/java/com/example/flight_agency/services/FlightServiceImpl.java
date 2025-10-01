@@ -43,7 +43,7 @@ public class FlightServiceImpl implements FlightService {
     public FlightDtos.FlightResponse findById(Long id) {
         return flightRepository.findById(id)
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Flight not found"));
+                .orElseThrow(() -> new RuntimeException("Flight no encontrado"));
     }
 
     @Override

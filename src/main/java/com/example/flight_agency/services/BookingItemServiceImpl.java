@@ -22,7 +22,7 @@ public class BookingItemServiceImpl implements BookingItemService {
     @Override
     public BookingItemDtos.BookingItemResponse create(BookingItemDtos.BookingItemCreateRequest request) {
         Flight flight = flightRepository.findById(request.flightId())
-                .orElseThrow(() -> new EntityNotFoundException("Flight not found with id " + request.flightId()));
+                .orElseThrow(() -> new EntityNotFoundException("Flight no encontrado por id " + request.flightId()));
 
         BookingItem bookingItem = bookingItemMapper.toEntity(request, flight);
         BookingItem saved = bookingItemRepository.save(bookingItem);
@@ -34,7 +34,7 @@ public class BookingItemServiceImpl implements BookingItemService {
     public BookingItemDtos.BookingItemResponse findById(Long id) {
         return bookingItemRepository.findById(id)
                 .map(bookingItemMapper::toResponse)
-                .orElseThrow(() -> new EntityNotFoundException("BookingItem not found with id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("BookingItem no encontrado por id " + id));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class BookingItemServiceImpl implements BookingItemService {
     @Override
     public void delete(Long id) {
         if (!bookingItemRepository.existsById(id)) {
-            throw new EntityNotFoundException("BookingItem not found with id " + id);
+            throw new EntityNotFoundException("BookingItem no encontrado por id " + id);
         }
         bookingItemRepository.deleteById(id);
     }
