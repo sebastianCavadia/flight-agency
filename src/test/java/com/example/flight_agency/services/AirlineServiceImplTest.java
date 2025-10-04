@@ -11,8 +11,7 @@ package com.example.flight_agency.services;
  import org.junit.jupiter.api.extension.ExtendWith;
  import org.mockito.InjectMocks;
  import org.mockito.Mock;
- import org.mockito.MockitoAnnotations;
- import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 
  import java.util.Optional;
 
@@ -28,15 +27,19 @@ class AirlineServiceImplTest {
     @InjectMocks
     private AirlineServiceImpl airlineService;
     private Airline airline;
+    private Airline airline1;
     private AirlineDtos.AirlineCreateRequest request;
     private AirlineDtos.AirlineResponse response;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
 
-        airline = Airline.builder()
+        airline1 = Airline.builder()
                 .id(1L)
+                .code("AV")
+                .name("Avianca")
+                .build();
+        airline = Airline.builder()
                 .code("AV")
                 .name("Avianca")
                 .build();
@@ -49,34 +52,37 @@ class AirlineServiceImplTest {
     @DisplayName("Crear Airline con éxito")
     void createAirline() {
         when(airlineMapper.toEntity(request)).thenReturn(airline);
-        when(airlineRepository.save(airline)).thenReturn(airline);
-        when(airlineMapper.toResponse(airline)).thenReturn(response);
+        when(airlineRepository.save(airline)).thenReturn(airline1);
+        when(airlineMapper.toResponse(airline1)).thenReturn(response);
 
         AirlineDtos.AirlineResponse result = airlineService.create(request);
 
         assertThat(result).isEqualTo(response);
         verify(airlineRepository, times(1)).save(airline);
+        verify(airlineMapper, times(1)).toResponse(airline1);
     }
 
     @Test
     @DisplayName("Buscar Airline por código con éxito")
     void findByCode() {
-        when(airlineRepository.findAirlineByCodeIgnoreCase("AV")).thenReturn(Optional.of(airline));
-        when(airlineMapper.toResponse(airline)).thenReturn(response);
+        when(airlineRepository.findAirlineByCodeIgnoreCase("AV")).thenReturn(Optional.of(airline1));
+        when(airlineMapper.toResponse(airline1)).thenReturn(response);
 
         AirlineDtos.AirlineResponse result = airlineService.getByCode("AV");
 
         assertThat(result).isEqualTo(response);
+        verify(airlineMapper, times(1)).toResponse(airline1);
     }
 
     @Test
     @DisplayName("Buscar Airline por id con éxito")
     void findById() {
-        when(airlineRepository.findById(1L)).thenReturn(Optional.of(airline));
-        when(airlineMapper.toResponse(airline)).thenReturn(response);
+        when(airlineRepository.findById(1L)).thenReturn(Optional.of(airline1));
+        when(airlineMapper.toResponse(airline1)).thenReturn(response);
 
         AirlineDtos.AirlineResponse result = airlineService.getById(1L);
 
         assertThat(result).isEqualTo(response);
+        verify(airlineMapper, times(1)).toResponse(airline1);
     }
 }

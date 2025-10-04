@@ -4,7 +4,6 @@ import com.example.flight_agency.api.dto.PassengerDtos;
 import com.example.flight_agency.domine.entities.Passenger;
 import com.example.flight_agency.domine.entities.PassengerProfile;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface PassengerMapper {
