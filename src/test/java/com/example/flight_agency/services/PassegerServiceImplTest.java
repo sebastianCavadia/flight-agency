@@ -8,7 +8,6 @@ import com.example.flight_agency.services.mappers.PassengerMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,7 +25,8 @@ class PassegerServiceImplTest {
     @Mock
     private PassengerRepository passengerRepository;
 
-    private final PassengerMapper mapper = Mappers.getMapper(PassengerMapper.class);
+    @Mock
+    private PassengerMapper mapper;
 
     @InjectMocks
     private PassegerServiceImpl passengerService;
@@ -88,7 +88,7 @@ class PassegerServiceImplTest {
         List<PassengerDtos.PassengerResponseBasic> list = passengerService.findAll();
 
         assertThat(list).hasSize(2);
-        assertThat(list.get(0).email()).isEqualTo("u1@test.com");
+        assertThat(list.getFirst().email()).isEqualTo("u1@test.com");
 
         verify(passengerRepository).findAll();
     }

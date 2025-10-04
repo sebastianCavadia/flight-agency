@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
@@ -25,15 +23,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDtos.BookingResponse create(BookingDtos.BookingCreateRequest request) {
+        Booking booking = bookingMapper.toEntity(request);
         Passenger passenger = passengerRepository.findById(request.passengerId())
                 .orElseThrow(() -> new EntityNotFoundException("Passenger no encontrado por id " + request.passengerId()));
+        booking.setPassenger(passenger);
 
-        Booking booking = Booking.builder()
-                .passenger(passenger)
-                .createAt(OffsetDateTime.now())
-                .build();
-
-        // Construir items
         request.items().forEach(itemReq -> {
             Flight flight = flightRepository.findById(itemReq.flightId())
                     .orElseThrow(() -> new EntityNotFoundException("Flight no encontrado por id " + itemReq.flightId()));
@@ -59,6 +53,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Page<BookingDtos.BookingResponse> findByPassengerEmail(String email, Pageable pageable) {
+        if (email == null || email.isBlank()) return Page.empty(pageable);
         return bookingRepository.findByPassengerEmailIgnoreCaseOrderByCreateAtDesc(email, pageable)
                 .map(bookingMapper::toResponse);
     }
