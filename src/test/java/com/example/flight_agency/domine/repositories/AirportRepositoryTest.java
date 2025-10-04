@@ -21,6 +21,7 @@ class AirportRepositoryTest  extends AbstractRepositoryTest {
         Airport airport = new Airport();
         airport.setName("El Dorado");
         airport.setCode("BOG");
+        airport.setCity("BOGOTA");
         airportRepository.save(airport);
 
         Optional<Airport> foundAirport = airportRepository.findByCode("BOG");

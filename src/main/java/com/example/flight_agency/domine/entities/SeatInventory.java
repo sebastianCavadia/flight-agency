@@ -1,5 +1,4 @@
 package com.example.flight_agency.domine.entities;
-import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,4 +27,7 @@ public class SeatInventory {
     @ManyToOne(optional = false)
     @JoinColumn(name = "flight_id")
     private Flight flight;
+
+    @Version
+    private Long version;
 }

@@ -26,7 +26,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDtos.BookingResponse create(BookingDtos.BookingCreateRequest request) {
         Passenger passenger = passengerRepository.findById(request.passengerId())
-                .orElseThrow(() -> new EntityNotFoundException("Passenger not found with id " + request.passengerId()));
+                .orElseThrow(() -> new EntityNotFoundException("Passenger no encontrado por id " + request.passengerId()));
 
         Booking booking = Booking.builder()
                 .passenger(passenger)
@@ -36,7 +36,7 @@ public class BookingServiceImpl implements BookingService {
         // Construir items
         request.items().forEach(itemReq -> {
             Flight flight = flightRepository.findById(itemReq.flightId())
-                    .orElseThrow(() -> new EntityNotFoundException("Flight not found with id " + itemReq.flightId()));
+                    .orElseThrow(() -> new EntityNotFoundException("Flight no encontrado por id " + itemReq.flightId()));
 
             BookingItem item = BookingItem.builder()
                     .flight(flight)
@@ -54,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtos.BookingResponse findById(Long id) {
         return bookingRepository.findByIdWithDetails(id)
                 .map(bookingMapper::toResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Booking not found with id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Booking no encontrado por id " + id));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void delete(Long id) {
         if (!bookingRepository.existsById(id)) {
-            throw new EntityNotFoundException("Booking not found with id " + id);
+            throw new EntityNotFoundException("Booking no encontrado por id " + id);
         }
         bookingRepository.deleteById(id);
     }

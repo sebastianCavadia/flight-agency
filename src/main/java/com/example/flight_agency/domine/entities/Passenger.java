@@ -25,8 +25,14 @@ public class Passenger {
     @OneToMany(mappedBy = "passenger")
     private List<Booking> bookings;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "passengerProfile_id")
     private PassengerProfile passengerProfile;
 
+    public void setPassengerProfile(PassengerProfile passengerProfile) {
+        this.passengerProfile = passengerProfile;
+        if (passengerProfile != null && !this.equals(passengerProfile.getPassenger())) {
+            passengerProfile.setPassenger(this);
+        }
+    }
 }

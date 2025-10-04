@@ -15,7 +15,7 @@ public interface BookingItemRepository extends JpaRepository<BookingItem, Long> 
     @Query("""
 select bi from BookingItem bi where bi.booking.id = :bookingId order by bi.segmentOrder asc
 """)
-    List<BookingItem> findByBookingId(@Param("bookingId") Long bookingId);
+    List<BookingItem> findByBookingIdOrderBySegmentOrderAsc(@Param("bookingId") Long bookingId);
 
     @Query("SELECT COALESCE(SUM(bi.price), 0) FROM BookingItem bi " +
             "WHERE bi.booking.id = :bookingId")

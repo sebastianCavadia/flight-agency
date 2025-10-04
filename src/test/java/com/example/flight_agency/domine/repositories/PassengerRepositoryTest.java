@@ -37,16 +37,20 @@ class PassengerRepositoryTest extends AbstractRepositoryTest {
     @Test
     @DisplayName("Buscar perfil por email")
     void findPassengerByEmail() {
-        PassengerProfile pp = PassengerProfile.builder().phone("3226778899").
-                countryCode("+57").build();
+        PassengerProfile pp = PassengerProfile.builder()
+                .phone("3226778899")
+                .countryCode("+57").build();
+        PassengerProfile save = passengerProfileRepository.save(pp);
 
-        Passenger p = Passenger.builder().fullName("Carlos Garra Gomez").
-                email("gomezcarlos@gmail.com").passengerProfile(pp).build();
+        Passenger p = Passenger.builder()
+                .fullName("Carlos Garra Gomez")
+                .email("gomezcarlos@gmail.com").build();
+        p.setPassengerProfile(save);
         passengerRepository.save(p);
 
         Optional<Passenger> found = passengerRepository.findPassengerByEmailIgnoreCase(p.getEmail());
 
-        PassengerProfile foundProfile = passengerProfileRepository.findById(pp.getId()).orElseThrow();
+        PassengerProfile foundProfile = passengerProfileRepository.findById(save.getId()).orElseThrow();
         assertThat(found).isPresent();
         assertThat(found.get().getPassengerProfile()).isEqualTo(p.getPassengerProfile());
 

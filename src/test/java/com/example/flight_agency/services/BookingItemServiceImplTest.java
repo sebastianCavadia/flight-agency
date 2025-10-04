@@ -9,7 +9,9 @@ package com.example.flight_agency.services;
  import com.example.flight_agency.services.mappers.BookingItemMapper;
  import org.junit.jupiter.api.BeforeEach;
  import org.junit.jupiter.api.Test;
+ import org.junit.jupiter.api.extension.ExtendWith;
  import org.mapstruct.factory.Mappers;
+ import org.mockito.junit.jupiter.MockitoExtension;
 
  import java.math.BigDecimal;
  import java.util.Optional;
@@ -17,6 +19,7 @@ package com.example.flight_agency.services;
  import static org.junit.jupiter.api.Assertions.*;
  import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class BookingItemServiceImplTest {
 
     private BookingItemRepository bookingItemRepository;

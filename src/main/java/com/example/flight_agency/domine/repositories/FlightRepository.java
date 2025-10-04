@@ -17,7 +17,7 @@ import java.util.List;
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 List<Flight> findFlightByAirlineNameIgnoreCase(String airlineName);
 
-    @Query("SELECT f FROM Flight f WHERE f.airport_destination.code = :origin " +
+    @Query("SELECT f FROM Flight f WHERE f.airport_origin.code = :origin " +
             "AND f.airport_destination.code = :destination " +
             "AND f.departureTime BETWEEN :fechaInicio AND :fechaSalida")
     Page<Flight> findByOriginAndDestinationAndDepartureTimeBetween(
@@ -51,6 +51,6 @@ List<Flight> findFlightByAirlineNameIgnoreCase(String airlineName);
             "HAVING COUNT(DISTINCT t.name) = :requiredCount",
             nativeQuery = true)
     List<Flight> findFlightsWithAllTags(
-            @Param("tags") Collection<String> tags,
-            @Param("cantTags") long cantTags);
+            @Param("tagNames") Collection<String> tagNames,
+            @Param("requiredCount") long requiredCount);
 }

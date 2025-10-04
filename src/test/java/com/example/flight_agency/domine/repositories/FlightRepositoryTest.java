@@ -41,11 +41,17 @@ class FlightRepositoryTest extends AbstractRepositoryTest {
         return airportRepository.save(airport);
     }
 
+
     @Test
     @DisplayName("Buscar vuelo por nombre de aerolinea")
     void findByAirlineName() {
         Airline airline = createAirline("LATAM","LA");
-        Flight flight = Flight.builder().airline(airline).build();
+        Flight flight = Flight.builder()
+                .airline(airline)
+                .number("LA100")
+                .departureTime(OffsetDateTime.now())
+                .arrivalTime(OffsetDateTime.now().plusDays(3))
+                .build();
         flightRepository.save(flight);
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -62,15 +68,25 @@ class FlightRepositoryTest extends AbstractRepositoryTest {
         Airport origin = createAirport("BOG","EL DORADO","BOGOTA");
         Airport destination = createAirport("SM","SIMON BOLIVAR","SANTA MARTA");
 
-        Flight flight = Flight.builder().airport_origin(origin).airport_destination(destination).
-                departureTime(OffsetDateTime.now()).build();
+        OffsetDateTime departureTime = OffsetDateTime.now().plusMinutes(1);
+
+        Flight flight = Flight.builder()
+                .number("AV201")
+                .airport_origin(origin)
+                .airport_destination(destination)
+                .departureTime(departureTime)
+                .arrivalTime(departureTime.plusHours(1))
+                .build();
         flightRepository.save(flight);
         Pageable pageable = PageRequest.of(0, 10);
 
+        OffsetDateTime start = OffsetDateTime.now().minusDays(5);
+        OffsetDateTime end = OffsetDateTime.now().plusMinutes(5);
+
         Page<Flight> foundFlights = flightRepository.
                 findByOriginAndDestinationAndDepartureTimeBetween("BOG",
-                        "SM", OffsetDateTime.now().minusMinutes(1),
-                        OffsetDateTime.now().plusMinutes(1), pageable);
+                        "SM", start,
+                        end, pageable);
 
 
         assertThat(foundFlights).isNotEmpty();
@@ -90,9 +106,14 @@ class FlightRepositoryTest extends AbstractRepositoryTest {
         Airport origin = createAirport("GU","GUAYMARAL","GUAYMARAL");
         Airport destination = createAirport("GA","GUSTAVO ARTUNDUAGA","FLORENCIA");
         Tag tag = tagRepository.save(Tag.builder().name("promo").build());
-        Flight flight = Flight.builder().airline(airline).airport_origin(origin).
-                airport_destination(destination).
-                departureTime(OffsetDateTime.now()).tags(Set.of(tag)).build();
+        Flight flight = Flight.builder()
+                .number("AV322")
+                .airline(airline)
+                .airport_origin(origin)
+                .airport_destination(destination)
+                .departureTime(OffsetDateTime.now())
+                .arrivalTime(OffsetDateTime.now().plusDays(4))
+                .tags(Set.of(tag)).build();
         flightRepository.save(flight);
 
         List<Flight> foundFlightAll = flightRepository.findFlightsWithAssociations("GU",
@@ -112,7 +133,12 @@ class FlightRepositoryTest extends AbstractRepositoryTest {
         Tag ta2 = tagRepository.save(Tag.builder().name("eco").build());
         Tag ta3 = tagRepository.save(Tag.builder().name("red-eye").build());
 
-        Flight flight = Flight.builder().tags(Set.of(ta1,ta2,ta3)).build();
+        Flight flight = Flight.builder()
+                .number("AV356")
+                .departureTime(OffsetDateTime.now())
+                .arrivalTime(OffsetDateTime.now().plusDays(2))
+                .tags(Set.of(ta1,ta2,ta3))
+                .build();
         flightRepository.save(flight);
         List<String> tags = List.of("promo", "eco","red-eye");
         List<Flight> result = flightRepository.findFlightsWithAllTags(tags,tags.size());

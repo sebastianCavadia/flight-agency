@@ -5,7 +5,6 @@ import com.example.flight_agency.domine.entities.BookingItem;
 import com.example.flight_agency.domine.entities.Flight;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface BookingItemMapper {
