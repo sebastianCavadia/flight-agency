@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
+import jakarta.persistence.EntityManager;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
@@ -22,6 +22,8 @@ class SeatInventoryRepositoryTest extends AbstractRepositoryTest {
 
     @Autowired
     private FlightRepository flightRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     private Flight createAndSaveFlight() {
         Flight flight = Flight.builder()
@@ -115,7 +117,8 @@ class SeatInventoryRepositoryTest extends AbstractRepositoryTest {
                 .decrementAvailableSeatsIfEnough(flight.getId(), Cabin.PREMIUM, 5);
 
         assertThat(updated).isEqualTo(1);
-
+        entityManager.flush();
+        entityManager.clear();
         SeatInventory updatedInventory = seatInventoryRepository
                 .findByFlightIdAndCabin(flight.getId(), Cabin.PREMIUM)
                 .orElseThrow();
@@ -163,6 +166,8 @@ class SeatInventoryRepositoryTest extends AbstractRepositoryTest {
                 .incrementAvailableSeats(flight.getId(), Cabin.ECONOMY, 5);
 
         assertThat(updated).isEqualTo(1);
+        entityManager.flush();
+        entityManager.clear();
 
         SeatInventory updatedInventory = seatInventoryRepository
                 .findByFlightIdAndCabin(flight.getId(), Cabin.ECONOMY)

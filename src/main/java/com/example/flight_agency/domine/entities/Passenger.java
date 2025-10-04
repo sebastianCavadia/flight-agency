@@ -29,4 +29,10 @@ public class Passenger {
     @JoinColumn(name = "passengerProfile_id")
     private PassengerProfile passengerProfile;
 
+    public void setPassengerProfile(PassengerProfile passengerProfile) {
+        this.passengerProfile = passengerProfile;
+        if (passengerProfile != null && !this.equals(passengerProfile.getPassenger())) {
+            passengerProfile.setPassenger(this);
+        }
+    }
 }

@@ -25,7 +25,8 @@ public class Booking {
     @JoinColumn(name = "passenger_id", nullable = false)
     private Passenger passenger;
 
-    @OneToMany(mappedBy = "booking")
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<BookingItem> items = new ArrayList<>();
 
     public void addItem(BookingItem item) {

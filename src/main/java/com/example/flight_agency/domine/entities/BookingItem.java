@@ -6,11 +6,11 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "bookingItems")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class BookingItem {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,4 +32,5 @@ public class BookingItem {
     @ManyToOne(optional = false)
     @JoinColumn(name = "flight_id")
     private Flight flight;
+
 }
